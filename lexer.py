@@ -7,7 +7,10 @@ class Lexer:
     srcpos = 0
 
     def __init__(self, file):
-        self.src = open(file, "r+")
+        try:
+            self.src = open(file, "r+")
+        except Exception as e:
+            print(e.__str__())
 
     def getchar(self):
         self.char = self.src.read(1)
@@ -31,6 +34,10 @@ class Lexer:
             self.symbol = "ADD"
         elif self.char == "*":
             self.symbol = "MULT"
+        elif self.char == "(":
+            self.symbol = "LP"
+        elif self.char == ")":
+            self.symbol = "RP"
         elif self.char.isalpha():
             self.symbol = "ID"
             self.token += self.char
@@ -39,5 +46,9 @@ class Lexer:
                 self.token += self.char
                 self.getchar()
             self.retract()
+        elif self.char == "$":
+            self.symbol = "EOF"
+            self.token = ""
         else:
             raise Exception("Lexical Error", self.srcpos)
+
